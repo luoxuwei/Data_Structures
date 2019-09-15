@@ -1,4 +1,15 @@
 # Compiled class file
+.idea
+.gradle
+build
+*.iml
+*/.DS_Store
+local.properties
+**/*.iml
+**/gen
+/.gitignore
+.gitmodules
+.DS_Store
 *.class
 
 # Log file
