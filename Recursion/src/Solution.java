@@ -16,4 +16,11 @@ public class Solution {
         }
         return head;
     }
+
+    public static void main(String[] a) {
+        ListNode test = new ListNode(new int[]{1,2,6,3,4,5,6});
+        System.out.println(test);
+        test = new Solution().removeElements(test, 6);
+        System.out.println(test);
+    }
 }
