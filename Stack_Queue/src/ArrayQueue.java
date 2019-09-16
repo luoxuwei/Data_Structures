@@ -12,7 +12,7 @@ public class ArrayQueue<E> implements Queue<E> {
     }
 
     @Override
-    public E getFont() {
+    public E getFront() {
         return data.getFirst();
     }
 

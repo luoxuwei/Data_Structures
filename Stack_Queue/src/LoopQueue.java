@@ -16,7 +16,7 @@ public class LoopQueue<E> implements Queue<E> {
     }
 
     @Override
-    public E getFont() {
+    public E getFront() {
         return data[front];
     }
 
@@ -27,8 +27,8 @@ public class LoopQueue<E> implements Queue<E> {
         }
         E res = data[front];
         front = (front+1)%data.length;
-        if (getSize()<=(data.length/4) && (data.length/4 > 0)) {
-           reSize(data.length/4);
+        if (getSize()<=(data.length/4) && (data.length/2 > 0)) {
+           reSize(data.length/2);
         }
         return res;
     }
@@ -43,26 +43,14 @@ public class LoopQueue<E> implements Queue<E> {
     }
 
     private void reSize(int capacity) {
+        int size = getSize();
         E[] newData = (E[]) new Object[capacity];
-        int tempTail=0;
-        if (front<tail) {
-            for (int i=front; i<tail; i++) {
-                newData[i-front] = data[i];
-                tempTail++;
-            }
-        } else {
-            for (int i=front; i<data.length; i++) {
-                newData[i-front] = data[front];
-                tempTail++;
-            }
-            for (int i=0; i<tail; i++) {
-                newData[data.length-front+i] = data[i];
-                tempTail++;
-            }
+        for (int i=0; i<size; i++) {
+            newData[i] = data[(front+i)%data.length];
         }
 
         front = 0;
-        tail = tempTail++;
+        tail = size;
         data = newData;
     }
 
@@ -79,22 +67,10 @@ public class LoopQueue<E> implements Queue<E> {
     public String toString() {
         StringBuilder res = new StringBuilder();
         res.append("Queue [ ");
-        if (front<tail) {
-            for (int i=front; i<tail; i++) {
-                res.append(data[i]);
-                if (i < tail-1) {
-                    res.append(",");
-                }
-            }
-        } else {
-            for (int i=front; i<data.length; i++) {
-                res.append(data[i]);
-            }
-            for (int i=0; i<tail; i++) {
-                res.append(data[i]);
-                if (i < tail-1) {
-                    res.append(",");
-                }
+        for (int i=0; i<getSize(); i++) {
+            res.append(data[(front+i)%data.length]);
+            if ((tail - 1) != ((front+i)%data.length)) {
+                res.append(", ");
             }
         }
         res.append(" ] tail ");
