@@ -4,8 +4,8 @@ public class Solution2 {
         ListNode dummyHead = new ListNode(-1);
         dummyHead.next = head;
         ListNode prv = dummyHead;
-        while (prv != null && prv.next != null) {
 
+        while (prv.next != null) {
             if (prv.next.val == val) {
                 prv.next = prv.next.next;
             } else {
@@ -13,7 +13,7 @@ public class Solution2 {
             }
 
         }
-        return head;
+        return dummyHead.next;
     }
 
     public static void main(String[] a) {
