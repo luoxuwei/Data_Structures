@@ -36,10 +36,67 @@ public class BST<E extends Comparable<E>> {
             return new Node(e);
         }
         if (root.e.compareTo(e) < 0) {
-            root.left = add(root.left, e);
-        } else if (root.e.compareTo(e) > 0) {
             root.right = add(root.right, e);
+        } else if (root.e.compareTo(e) > 0) {
+            root.left = add(root.left, e);
         }
         return root;
+    }
+
+    public boolean contains(E e) {
+        return contains(root, e);
+    }
+
+    private boolean contains(Node root, E e) {
+        if (root == null) {
+            return false;
+        }
+        if (root.e.compareTo(e) > 0) {
+            return contains(root.left, e);
+        } else if (root.e.compareTo(e) < 0) {
+            return contains(root.right, e);
+        } else {
+            return true;
+        }
+    }
+
+    public void preOrder() {
+        preOrder(root);
+    }
+
+    private void preOrder(Node root) {
+        if (root == null)
+            return;
+
+        System.out.println(root.e);
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+
+    public void inOrder() {
+        inOrder(root);
+    }
+
+    private void inOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+
+        inOrder(root.left);
+        System.out.println(root.e);
+        inOrder(root.right);
+    }
+
+    public void postOrder() {
+        postOrder(root);
+    }
+
+    private void postOrder(Node root) {
+        if (root == null)
+            return;
+
+        postOrder(root);
+        postOrder(root);
+        System.out.println(root.e);
     }
 }
