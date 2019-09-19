@@ -1,11 +1,13 @@
 public class Main {
 
     public static void main(String[] args) {
-        int[] nums = new int[]{1,2,3,4,5,6,7};
+        int[] nums = new int[]{4,3,5,2,6,1,7};
         BST<Integer> bst = new BST<>();
         for (int i: nums)
             bst.add(i);
 
         bst.preOrder();
+        System.out.println("----------");
+        bst.preOrder1();
     }
 }

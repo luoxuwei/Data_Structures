@@ -1,6 +1,8 @@
+import java.util.Stack;
+
 public class BST<E extends Comparable<E>> {
 
-    private class Node {
+    private class Node<E extends Comparable<E>> {
         E e;
         Node left,right;
         public Node(E e) {
@@ -98,5 +100,21 @@ public class BST<E extends Comparable<E>> {
         postOrder(root);
         postOrder(root);
         System.out.println(root.e);
+    }
+
+    public void preOrder1() {
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(root);
+        Node cur = null;
+        while (!stack.isEmpty()) {
+            cur = stack.pop();
+            System.out.println(cur.e);
+            if (cur.right != null) {
+                stack.push(cur.right);
+            }
+            if (cur.left != null) {
+                stack.push(cur.left);
+            }
+        }
     }
 }
