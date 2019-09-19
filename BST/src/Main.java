@@ -11,5 +11,8 @@ public class Main {
         bst.preOrder1();
         System.out.println("----------");
         bst.levelOrder();
+        System.out.println("minimum: "+bst.minimum()+", maximum: "+bst.maximum());
+        System.out.println("----------");
+        System.out.println("minimumNR: "+bst.minimumNR()+", maximumNR: "+bst.maximumNR());
     }
 }

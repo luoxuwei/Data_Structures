@@ -10,6 +10,11 @@ public class BST<E extends Comparable<E>> {
             left = null;
             right = null;
         }
+
+        @Override
+        public String toString() {
+            return e.toString();
+        }
     }
 
     private Node root;
@@ -130,5 +135,49 @@ public class BST<E extends Comparable<E>> {
             if (cur.right != null)
                 queue.addLast(cur.right);
         }
+    }
+
+    public Node minimum() {
+        if (size == 0)
+            throw new IllegalArgumentException("size == 0");
+        return minimum(root);
+    }
+
+     private Node minimum(Node root) {
+        if (root.left == null) {
+            return root;
+        }
+        return minimum(root.left);
+    }
+
+    public Node maximum() {
+        if (size == 0)
+            throw new IllegalArgumentException("size == 0");
+        return maximum(root);
+    }
+
+    private Node maximum(Node root) {
+        if (root.right == null)
+            return root;
+
+        return maximum(root.right);
+    }
+
+    public Node minimumNR() {
+        if (size == 0)
+            throw new IllegalArgumentException("size == 0");
+        Node cur = root;
+        while (cur.left != null)
+            cur = cur.left;
+        return cur;
+    }
+
+    public Node maximumNR() {
+        if (size == 0)
+            throw new IllegalArgumentException("size == 0");
+        Node cur = root;
+        while (cur.right != null)
+            cur = cur.right;
+        return cur;
     }
 }
