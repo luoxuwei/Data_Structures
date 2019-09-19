@@ -9,5 +9,7 @@ public class Main {
         bst.preOrder();
         System.out.println("----------");
         bst.preOrder1();
+        System.out.println("----------");
+        bst.levelOrder();
     }
 }

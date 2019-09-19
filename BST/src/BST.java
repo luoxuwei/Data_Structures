@@ -1,4 +1,4 @@
-import java.util.Stack;
+import java.util.*;
 
 public class BST<E extends Comparable<E>> {
 
@@ -115,6 +115,20 @@ public class BST<E extends Comparable<E>> {
             if (cur.left != null) {
                 stack.push(cur.left);
             }
+        }
+    }
+
+    public void levelOrder() {
+        LinkedList<Node<E>> queue = new LinkedList<>();
+        queue.addLast(root);
+        Node cur = null;
+        while (!queue.isEmpty()) {
+            cur = queue.removeFirst();
+            System.out.println(cur.e);
+            if (cur.left != null)
+                queue.addLast(cur.left);
+            if (cur.right != null)
+                queue.addLast(cur.right);
         }
     }
 }
