@@ -2,13 +2,17 @@ import java.util.*;
 
 public class BST<E extends Comparable<E>> {
 
-    private class Node<E extends Comparable<E>> {
+    private class Node {
         E e;
         Node left,right;
         public Node(E e) {
             this.e = e;
             left = null;
             right = null;
+        }
+
+        public E getValue() {
+            return e;
         }
 
         @Override
@@ -108,7 +112,7 @@ public class BST<E extends Comparable<E>> {
     }
 
     public void preOrder1() {
-        Stack<Node<E>> stack = new Stack<>();
+        Stack<Node> stack = new Stack<>();
         stack.push(root);
         Node cur = null;
         while (!stack.isEmpty()) {
@@ -124,7 +128,7 @@ public class BST<E extends Comparable<E>> {
     }
 
     public void levelOrder() {
-        LinkedList<Node<E>> queue = new LinkedList<>();
+        LinkedList<Node> queue = new LinkedList<>();
         queue.addLast(root);
         Node cur = null;
         while (!queue.isEmpty()) {
@@ -137,10 +141,10 @@ public class BST<E extends Comparable<E>> {
         }
     }
 
-    public Node minimum() {
+    public E minimum() {
         if (size == 0)
             throw new IllegalArgumentException("size == 0");
-        return minimum(root);
+        return minimum(root).e;
     }
 
      private Node minimum(Node root) {
@@ -150,10 +154,10 @@ public class BST<E extends Comparable<E>> {
         return minimum(root.left);
     }
 
-    public Node maximum() {
+    public E maximum() {
         if (size == 0)
             throw new IllegalArgumentException("size == 0");
-        return maximum(root);
+        return maximum(root).e;
     }
 
     private Node maximum(Node root) {
@@ -163,21 +167,93 @@ public class BST<E extends Comparable<E>> {
         return maximum(root.right);
     }
 
-    public Node minimumNR() {
+    public E minimumNR() {
         if (size == 0)
             throw new IllegalArgumentException("size == 0");
         Node cur = root;
         while (cur.left != null)
             cur = cur.left;
-        return cur;
+        return cur.e;
     }
 
-    public Node maximumNR() {
+    public E maximumNR() {
         if (size == 0)
             throw new IllegalArgumentException("size == 0");
         Node cur = root;
         while (cur.right != null)
             cur = cur.right;
-        return cur;
+        return cur.e;
+    }
+
+    public E removeMinimum() {
+        Node res = minimum(root);
+        root = removeMinimum(root);
+        return res.e;
+    }
+
+    public Node removeMinimum(Node root) {
+        if (root.left == null) {
+            Node right = root.right;
+            root.right = null;
+            size--;
+            return right;
+        }
+
+        root.left = removeMinimum(root.left);
+        return root;
+    }
+
+    public E removeMaximum() {
+        E res = maximum();
+        root = removeMaximum(root);
+        return res;
+    }
+
+    public Node removeMaximum(Node root) {
+        if (root.right == null) {
+            Node left = root.left;
+            root.left = null;
+            size--;
+            return left;
+        }
+
+        root.right = removeMaximum(root.right);
+        return root;
+    }
+
+    public E removeMinimumNR() {
+        E res = minimum();
+        Node dummyRoot = new Node(null);
+        dummyRoot.left = root;
+        Node cur = dummyRoot;
+        Node parent = dummyRoot;
+        while (cur.left != null) {
+            parent = cur;
+            cur = cur.left;
+        }
+
+        parent.left = cur.right;
+        cur.right = null;
+        root = dummyRoot.left;
+        size--;
+        return res;
+    }
+
+    public E removeMaximumNR() {
+        E res = maximum();
+        Node dummyRoot = new Node(null);
+        dummyRoot.right = root;
+        Node cur = dummyRoot;
+        Node parent = dummyRoot;
+        while (cur.right != null) {
+            parent = cur;
+            cur = cur.right;
+        }
+
+        parent.right = cur.left;
+        cur.left = null;
+        root = dummyRoot.right;
+        size--;
+        return res;
     }
 }
