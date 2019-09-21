@@ -76,8 +76,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map<K, V> {
             } else {
                 next = removeRightMiximum(cur);
             }
-            next.right = cur.right;
-            next.left = cur.left;
+            if (next != null) {
+                next.right = cur.right;
+                next.left = cur.left;
+            }
+
             if (parent.k.compareTo(k) > 0) {
                 parent.left = next;
             } else {
