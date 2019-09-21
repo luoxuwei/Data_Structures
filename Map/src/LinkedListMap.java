@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class LinkedListMap<K,V> implements Map<K, V> {
 
     private class Node {
@@ -8,6 +10,11 @@ public class LinkedListMap<K,V> implements Map<K, V> {
             key = k;
             value = v;
             next = n;
+        }
+
+        @Override
+        public String toString(){
+            return key.toString() + " : " + value.toString();
         }
     }
 
@@ -69,7 +76,8 @@ public class LinkedListMap<K,V> implements Map<K, V> {
 
     @Override
     public V get(K k) {
-        return getNode(k).value;
+        Node node = getNode(k);
+        return node == null? null:node.value;
     }
 
     @Override
@@ -80,5 +88,36 @@ public class LinkedListMap<K,V> implements Map<K, V> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @Override
+    public void set(K k, V v) {
+        Node node = getNode(k);
+        if (node != null)
+            node.value = v;
+    }
+
+    public static void main(String[] args){
+
+        System.out.println("Pride and Prejudice");
+
+        ArrayList<String> words = new ArrayList<>();
+        if(FileOperation.readFile("pride-and-prejudice.txt", words)) {
+            System.out.println("Total words: " + words.size());
+
+            LinkedListMap<String, Integer> map = new LinkedListMap<>();
+            for (String word : words) {
+                if (map.contains(word))
+                    map.set(word, map.get(word) + 1);
+                else
+                    map.add(word, 1);
+            }
+
+            System.out.println("Total different words: " + map.getSize());
+            System.out.println("Frequency of PRIDE: " + map.get("pride"));
+            System.out.println("Frequency of PREJUDICE: " + map.get("prejudice"));
+        }
+
+        System.out.println();
     }
 }

@@ -5,4 +5,5 @@ public interface Map<K, V> {
     V get(K k);
     int getSize();
     boolean isEmpty();
+    void set(K k, V v);
 }
