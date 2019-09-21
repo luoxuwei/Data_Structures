@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Trie {
@@ -43,14 +44,66 @@ public class Trie {
     }
 
     private void add(String word, Node root) {
-        if (word.length() == 0 && !root.isWord) {
-            root.isWord = true;
-            size++;
+        if (word.length() == 0) {
+            if (!root.isWord) {
+                root.isWord = true;
+                size++;
+            }
             return;
         }
         if (root.next.get(word.charAt(0)) == null)
             root.next.put(word.charAt(0), new Node());
         add(word.substring(1), root.next.get(word.charAt(0)));
+    }
+
+    public boolean contains(String word) {
+        Node cur = root;
+        for (int i=0; i<word.length(); i++) {
+            cur = cur.next.get(word.charAt(i));
+            if (cur == null)
+                return false;
+        }
+        return cur.isWord;
+    }
+
+    public boolean containsR(String word) {
+        return containsR(word, root);
+    }
+
+    private boolean containsR(String word, Node root) {
+        if (root == null)
+            return false;
+        if (word.length() == 0) {
+            return root.isWord;
+        }
+
+        return containsR(word.substring(1), root.next.get(word.charAt(0)));
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println("Pride and Prejudice");
+
+        ArrayList<String> words = new ArrayList<>();
+        if (FileOperation.readFile("pride-and-prejudice.txt", words)) {
+
+            Trie trie = new Trie();
+            for (String word : words)
+                trie.add(word);
+            System.out.println("Total different words: " + trie.getSize());
+            System.out.println("contains "+words.get(2)+": " + trie.contains(words.get(2)));
+
+            System.out.println("-----------------");
+            trie = new Trie();
+            for (String word : words)
+                trie.addR(word);
+            System.out.println("Total different words: " + trie.getSize());
+            System.out.println("contains "+words.get(2)+": " + trie.containsR(words.get(2)));
+        }
     }
 
 }
