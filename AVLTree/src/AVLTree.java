@@ -9,6 +9,7 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         Node left;
         Node right;
         int height;
+
         public Node(K k, V v) {
             this.k = k;
             this.v = v;
@@ -43,21 +44,28 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
             size++;
             return new Node(k, v);
         }
-        if (root.k.compareTo(k)<0) {
+        if (root.k.compareTo(k) < 0) {
             root.right = add(root.right, k, v);
-        } else if (root.k.compareTo(k)>0) {
-            root.left = add(root.left, k,v);
+        } else if (root.k.compareTo(k) > 0) {
+            root.left = add(root.left, k, v);
         } else {
             root.v = v;
         }
         root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right));
         if (Math.abs(getBlanceFactor(root)) > 1)
-            System.out.println("unbalanced "+getBlanceFactor(root));
-        if (getBlanceFactor(root) > 1 && getBlanceFactor(root.left)>=0)
+            System.out.println("unbalanced " + getBlanceFactor(root));
+        if (getBlanceFactor(root) > 1 && getBlanceFactor(root.left) >= 0)
             return rightRotate(root);
 
-        if (getBlanceFactor(root) < -1 && getBlanceFactor(root.right)<=   0)
+        if (getBlanceFactor(root) < -1 && getBlanceFactor(root.right) <= 0)
             return leftRotate(root);
+
+        if (getBlanceFactor(root) > 1 && getBlanceFactor(root.left) < 0)
+            return lrRotate(root);
+
+        if (getBlanceFactor(root) < -1 && getBlanceFactor(root.right) > 0)
+            return rlRotate(root);
+
         return root;
     }
 
@@ -69,7 +77,7 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         if (node == null)
             return true;
 
-        if (Math.abs(getBlanceFactor(node))>1)
+        if (Math.abs(getBlanceFactor(node)) > 1)
             return false;
 
         return isBalance(node.left) && isBalance(node.right);
@@ -78,8 +86,8 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
     public boolean isBST() {
         ArrayList<K> ks = new ArrayList<>();
         inOrder(root, ks);
-        for (int i=1; i<ks.size(); i++) {
-            if (ks.get(i-1).compareTo(ks.get(i))>0) {
+        for (int i = 1; i < ks.size(); i++) {
+            if (ks.get(i - 1).compareTo(ks.get(i)) > 0) {
                 return false;
             }
         }
@@ -122,6 +130,19 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         return right;
     }
 
+    private Node lrRotate(Node node) {
+        if (node == null || node.left == null)
+            return node;
+        node.left = leftRotate(node.left);
+        return rightRotate(node);
+    }
+
+    private Node rlRotate(Node node) {
+        if (node == null || node.right == null)
+            return node;
+        node.right = rightRotate(node.right);
+        return leftRotate(node);
+    }
 
     @Override
     public V remove(K k) {
@@ -194,7 +215,7 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
     @Override
     public V get(K k) {
         Node node = getNode(k);
-        return node == null?null:node.v;
+        return node == null ? null : node.v;
     }
 
     private Node getNode(K k) {
@@ -226,12 +247,12 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
             node.v = v;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         System.out.println("Pride and Prejudice");
 
         ArrayList<String> words = new ArrayList<>();
-        if(FileOperation.readFile("pride-and-prejudice.txt", words)) {
+        if (FileOperation.readFile("pride-and-prejudice.txt", words)) {
             System.out.println("Total words: " + words.size());
 
             AVLTree<String, Integer> map = new AVLTree<>();
