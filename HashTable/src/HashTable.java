@@ -18,4 +18,20 @@ public class HashTable<K, V> {
     private int hash(K k) {
         return k.hashCode() & 0x7fffffff % M;
     }
+
+    public void add(K k, V v) {
+        int hash = hash(k);
+        TreeMap<K,V> map = hashTable[hash];
+        if (map == null) {
+            map = new TreeMap<>();
+            hashTable[hash] = map;
+        }
+
+        if (map.containsKey(k))
+            map.put(k,v);
+        else {
+            map.put(k,v);
+            size++;
+        }
+    }
 }
