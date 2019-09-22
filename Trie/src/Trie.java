@@ -80,6 +80,32 @@ public class Trie {
         return containsR(word.substring(1), root.next.get(word.charAt(0)));
     }
 
+    public boolean isPrefix(String word) {
+        Node cur = root;
+        for (int i=0; i<word.length(); i++) {
+            cur = cur.next.get(word.charAt(i));
+            if (cur == null)
+                return false;
+        }
+
+        return true;
+    }
+
+    public boolean isPrefixR(String word) {
+        return isPrefix(word, root);
+    }
+
+    private boolean isPrefix(String word, Node root) {
+        if (root == null) {
+            return false;
+        }
+        if (word.length() == 0) {
+            return true;
+        }
+
+        return isPrefix(word.substring(1), root.next.get(word.charAt(0)));
+    }
+
     public int getSize() {
         return size;
     }
