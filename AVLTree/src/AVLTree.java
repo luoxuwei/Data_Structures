@@ -53,8 +53,6 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
             return root;
         }
         root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right));
-        if (Math.abs(getBlanceFactor(root)) > 1)
-            System.out.println("unbalanced " + getBlanceFactor(root));
         if (getBlanceFactor(root) > 1 && getBlanceFactor(root.left) >= 0)
             return rightRotate(root);
 
@@ -112,8 +110,8 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         left.right = node;
         node.left = leftRigt;
 
-        node.height = Math.max(getHeight(node.left), getHeight(node.right));
-        left.height = Math.max(getHeight(left.left), getHeight(left.right));
+        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        left.height = Math.max(getHeight(left.left), getHeight(left.right)) + 1;
 
         return left;
     }
@@ -126,8 +124,8 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         Node rightLeft = right.left;
         right.left = node;
         node.right = rightLeft;
-        node.height = Math.max(getHeight(node.left), getHeight(node.right));
-        right.height = Math.max(getHeight(right.left), getHeight(right.right));
+        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        right.height = Math.max(getHeight(right.left), getHeight(right.right)) + 1;
         return right;
     }
 
@@ -176,27 +174,23 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
                 next.left = node.left;
                 node.left = null;
                 node.right = null;
-                size--;
                 retNode = next;
             }
-            if (retNode == null)
-                return null;
-            retNode.height = 1 + Math.max(getHeight(retNode.left), getHeight(retNode.right));
-            if (Math.abs(getBlanceFactor(root)) > 1)
-                System.out.println("unbalanced " + getBlanceFactor(retNode));
-            if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) >= 0)
-                return rightRotate(retNode);
-
-            if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) <= 0)
-                return leftRotate(retNode);
-
-            if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) < 0)
-                return lrRotate(retNode);
-
-            if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) > 0)
-                return rlRotate(retNode);
-
         }
+        if (retNode == null)
+            return null;
+        retNode.height = 1 + Math.max(getHeight(retNode.left), getHeight(retNode.right));
+        if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) >= 0)
+            return rightRotate(retNode);
+
+        if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) <= 0)
+            return leftRotate(retNode);
+
+        if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) < 0)
+            return lrRotate(retNode);
+
+        if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) > 0)
+            return rlRotate(retNode);
         return retNode;
     }
 

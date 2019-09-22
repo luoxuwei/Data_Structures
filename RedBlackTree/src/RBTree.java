@@ -42,9 +42,9 @@ public class RBTree<K extends Comparable<K>, V> {
         }
 
         if (isRed(root.right) && !isRed(root.left))
-            leftRotate(root);
+           root = leftRotate(root);
         if (isRed(root.left) && isRed(root.left.left))
-            rightRotate(root);
+            root = rightRotate(root);
         if (isRed(root.left) && isRed(root.right))
             flipColor(root);
 
@@ -136,7 +136,6 @@ public class RBTree<K extends Comparable<K>, V> {
                 next.left = node.left;
                 node.left = null;
                 node.right = null;
-                size--;
                 retNode = next;
             }
             if (retNode == null)
