@@ -34,4 +34,41 @@ public class HashTable<K, V> {
             size++;
         }
     }
+
+    public V remove(K k) {
+        int hash = hash(k);
+        TreeMap<K,V> map = hashTable[hash];
+        if (map == null || !map.containsKey(k)) {
+            return null;
+        }
+        size--;
+        return map.remove(k);
+    }
+
+    public void set(K k, V v) {
+        int hash = hash(k);
+        TreeMap<K,V> map = hashTable[hash];
+        if (map == null || !map.containsKey(k)) {
+           throw new IllegalArgumentException("");
+        }
+        map.put(k,v);
+    }
+
+    public V get(K k) {
+        int hash = hash(k);
+        TreeMap<K,V> map = hashTable[hash];
+        if (map == null || !map.containsKey(k)) {
+            return null;
+        }
+        return map.get(k);
+    }
+
+    public boolean contains(K k) {
+        int hash = hash(k);
+        TreeMap<K,V> map = hashTable[hash];
+        if (map == null || !map.containsKey(k)) {
+            return false;
+        }
+        return true;
+    }
 }
