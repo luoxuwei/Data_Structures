@@ -146,65 +146,46 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
 
     @Override
     public V remove(K k) {
-        if (size == 0) {
-            return null;
-        }
-        Node parent = root;
-        Node cur = root;
-        while (cur != null && cur.k.compareTo(k) != 0) {
-            parent = cur;
-            if (cur.k.compareTo(k) < 0)
-                cur = cur.right;
-            else if (cur.k.compareTo(k) > 0)
-                cur = cur.left;
-        }
-        Node next = null;
-        if (cur != null) {
-            if (cur == root) {
-                size--;
-                root = null;
-                return root.v;
-            }
-            if (cur.left == null) {
-                next = cur.right;
-            } else if (cur.right == null) {
-                next = cur.left;
-            } else {
-                next = removeRightMiximum(cur);
-            }
-            if (next != null) {
-                next.right = cur.right;
-                next.left = cur.left;
-            }
-
-            if (parent.k.compareTo(k) > 0) {
-                parent.left = next;
-            } else {
-                parent.right = next;
-            }
-            size--;
-            return cur.v;
-        }
-
-        return null;
+        Node node = getNode(k);
+        root = remove(root, k);
+        return node == null?null:node.v;
     }
 
-    private Node removeRightMiximum(Node rootParent) {
-        Node dummyRoot = new Node(null, null);
-        dummyRoot.left = rootParent.right;
-        Node parent = dummyRoot;
-        Node cur = dummyRoot;
-        while (cur.left != null) {
-            parent = cur;
-            cur = cur.left;
-        }
-        if (parent == rootParent) {
-            parent.right = cur.right;
-        } else {
-            parent.left = cur.right;
-        }
+    private Node remove(Node node, K e) {
+        if (node == null)
+            return node;
 
-        return cur;
+        if (node.k.compareTo(e) > 0) {
+            node.left = remove(node.left, e);
+        } else if (node.k.compareTo(e) < 0) {
+            node.right = remove(node.right, e);
+        } else {
+            if (node.right == null)
+                return node.left;
+            if (node.left == null)
+                return node.right;
+            Node next = minimum(node.right);
+            node.right = removeMinimun(node.right);
+            next.right = node.right;
+            next.left = node.left;
+            node.left = null;
+            node.right = null;
+            return next;
+        }
+        return node;
+    }
+
+    private Node removeMinimun(Node node) {
+        if (node.left == null)
+            return node.right;
+        node.left = removeMinimun(node.left);
+        return node;
+    }
+
+    private Node minimum(Node rootParent) {
+        if (rootParent.left == null)
+            return rootParent;
+        return minimum(rootParent.left);
     }
 
     @Override
