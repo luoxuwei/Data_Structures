@@ -53,7 +53,11 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right));
         if (Math.abs(getBlanceFactor(root)) > 1)
             System.out.println("unbalanced "+getBlanceFactor(root));
+        if (getBlanceFactor(root) > 1 && getBlanceFactor(root.left)>=0)
+            return rightRotate(root);
 
+        if (getBlanceFactor(root) < -1 && getBlanceFactor(root.right)<=   0)
+            return leftRotate(root);
         return root;
     }
 
@@ -90,6 +94,34 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
         ks.add(root.k);
         inOrder(root.right, ks);
     }
+
+    private Node rightRotate(Node node) {
+        if (node == null || node.left == null)
+            return node;
+        Node left = node.left;
+        Node leftRigt = left.right;
+        left.right = node;
+        node.left = leftRigt;
+
+        node.height = Math.max(getHeight(node.left), getHeight(node.right));
+        left.height = Math.max(getHeight(left.left), getHeight(left.right));
+
+        return left;
+    }
+
+    private Node leftRotate(Node node) {
+        if (node == null || node.right == null)
+            return node;
+
+        Node right = node.right;
+        Node rightLeft = right.left;
+        right.left = node;
+        node.right = rightLeft;
+        node.height = Math.max(getHeight(node.left), getHeight(node.right));
+        right.height = Math.max(getHeight(right.left), getHeight(right.right));
+        return right;
+    }
+
 
     @Override
     public V remove(K k) {
