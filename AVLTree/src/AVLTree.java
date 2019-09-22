@@ -50,6 +50,7 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
             root.left = add(root.left, k, v);
         } else {
             root.v = v;
+            return root;
         }
         root.height = 1 + Math.max(getHeight(root.left), getHeight(root.right));
         if (Math.abs(getBlanceFactor(root)) > 1)
@@ -154,32 +155,49 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
     private Node remove(Node node, K e) {
         if (node == null)
             return node;
-
+        Node retNode;
         if (node.k.compareTo(e) > 0) {
             node.left = remove(node.left, e);
+            retNode = node;
         } else if (node.k.compareTo(e) < 0) {
             node.right = remove(node.right, e);
+            retNode = node;
         } else {
-            if (node.right == null)
-                return node.left;
-            if (node.left == null)
-                return node.right;
-            Node next = minimum(node.right);
-            node.right = removeMinimun(node.right);
-            next.right = node.right;
-            next.left = node.left;
-            node.left = null;
-            node.right = null;
-            return next;
-        }
-        return node;
-    }
+            if (node.right == null) {
+                retNode = node.left;
+                size--;
+            } else if (node.left == null) {
+                retNode = node.right;
+                size--;
+            } else {
+                Node next = minimum(node.right);
+                node.right = remove(node.right, next.k);
+                next.right = node.right;
+                next.left = node.left;
+                node.left = null;
+                node.right = null;
+                size--;
+                retNode = next;
+            }
+            if (retNode == null)
+                return null;
+            retNode.height = 1 + Math.max(getHeight(retNode.left), getHeight(retNode.right));
+            if (Math.abs(getBlanceFactor(root)) > 1)
+                System.out.println("unbalanced " + getBlanceFactor(retNode));
+            if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) >= 0)
+                return rightRotate(retNode);
 
-    private Node removeMinimun(Node node) {
-        if (node.left == null)
-            return node.right;
-        node.left = removeMinimun(node.left);
-        return node;
+            if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) <= 0)
+                return leftRotate(retNode);
+
+            if (getBlanceFactor(retNode) > 1 && getBlanceFactor(retNode.left) < 0)
+                return lrRotate(retNode);
+
+            if (getBlanceFactor(retNode) < -1 && getBlanceFactor(retNode.right) > 0)
+                return rlRotate(retNode);
+
+        }
+        return retNode;
     }
 
     private Node minimum(Node rootParent) {
@@ -249,6 +267,16 @@ public class AVLTree<K extends Comparable<K>, V> implements Map<K, V> {
             System.out.println("Frequency of PREJUDICE: " + map.get("prejudice"));
             System.out.println("is balance: " + map.isBalance());
             System.out.println("is bst: " + map.isBST());
+
+            for (String word:words) {
+                map.remove(word);
+                if (!map.isBST())
+                    System.out.println("remove !bst");
+                if (!map.isBalance())
+                    System.out.println("remove !balance");
+            }
+
+            System.out.println("after remove Total different words: " + map.getSize());
         }
 
         System.out.println();
