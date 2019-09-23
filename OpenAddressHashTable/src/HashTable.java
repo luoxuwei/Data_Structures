@@ -38,6 +38,14 @@ public class HashTable<K, V> {
         return h & 0x7fffffff & (table.length -1);
     }
 
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     public void add(K k, V v) {
         int i = hash(k.hashCode());
 
@@ -78,18 +86,46 @@ public class HashTable<K, V> {
         return null;
     }
 
+    public boolean contains(K k) {
+        return getNode(k) != null;
+    }
+
+    public V get(K k) {
+        Node<K,V> node = getNode(k);
+        return node == null?null:node.v;
+    }
+
+    private Node getNode(K k) {
+        int i=hash(k.hashCode());
+
+        for(Node<K,V> cur = table[i]; cur!=null; cur = table[i=nextIndex(i, table.length)]) {
+            if (cur.k.equals(k)) {
+                return cur;
+            }
+        }
+
+        return null;
+    }
+
     public static void main(String[] args) {
         HashTable<String, Integer> hashTable = new HashTable<>();
 
         String[] test = new String[]{"aaa", "aa", "a", "aa", "aa", "aaaa"};
         for (String s:test) {
-            hashTable.add(s, 0);
+            if (hashTable.contains(s)) {
+                hashTable.add(s, hashTable.get(s)+1);
+            } else {
+                hashTable.add(s, 1);
+            }
         }
         System.out.println("test add completed");
         for (String s:test) {
+            System.out.println("test get "+s+"= "+hashTable.get(s));
+        }
+        for (String s:test) {
             hashTable.remove(s);
         }
-        System.out.println("test remove completed");
+        System.out.println("test remove completed size="+hashTable.getSize());
     }
 
 }
