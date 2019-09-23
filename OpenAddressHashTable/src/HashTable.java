@@ -34,8 +34,8 @@ public class HashTable<K, V> {
         setThreshold(INITIAL_CAPACITY);
     }
 
-    private int hash(int h) {
-        return h & 0x7fffffff & (table.length -1);
+    private int hash(int h, int len) {
+        return h & 0x7fffffff & (len -1);
     }
 
     public int getSize() {
@@ -47,7 +47,7 @@ public class HashTable<K, V> {
     }
 
     public void add(K k, V v) {
-        int i = hash(k.hashCode());
+        int i = hash(k.hashCode(), table.length);
 
         for (Node cur = table[i]; cur != null; cur = table[i=nextIndex(i, table.length)]) {
             if (cur.k.equals(k)) {
@@ -58,10 +58,12 @@ public class HashTable<K, V> {
 
         table[i] = new Node(k,v);
         size++;
+        if (size >= threshold)
+           resize();
     }
 
     public V remove(K k) {
-        int i=hash(k.hashCode());
+        int i=hash(k.hashCode(), table.length);
 
         for(Node<K,V> cur = table[i]; cur!=null; cur = table[i=nextIndex(i, table.length)]) {
             if (cur.k.equals(k)) {
@@ -72,7 +74,7 @@ public class HashTable<K, V> {
                 for (i = nextIndex(i, table.length);
                      (cur = table[i]) != null;
                      i = nextIndex(i, table.length)) {
-                    int h = hash(cur.k.hashCode());
+                    int h = hash(cur.k.hashCode(), table.length);
                     if (h != i) {
                         table[i] = null;
                         while (table[h] != null)
@@ -96,7 +98,7 @@ public class HashTable<K, V> {
     }
 
     private Node getNode(K k) {
-        int i=hash(k.hashCode());
+        int i=hash(k.hashCode(), table.length);
 
         for(Node<K,V> cur = table[i]; cur!=null; cur = table[i=nextIndex(i, table.length)]) {
             if (cur.k.equals(k)) {
@@ -105,6 +107,24 @@ public class HashTable<K, V> {
         }
 
         return null;
+    }
+
+    private void resize() {
+        int oldLen = table.length;
+        Node<K,V>[] newTable = new Node[2*oldLen];
+        Node cur=null;
+
+        for(int i=0; i<oldLen; i++) {
+            cur = table[i];
+            if (cur != null) {
+                int h = hash(cur.k.hashCode(), newTable.length);
+                while (newTable[h] != null)
+                    h = nextIndex(h, newTable.length);
+                newTable[h] = cur;
+            }
+        }
+        table = newTable;
+        setThreshold(newTable.length);
     }
 
     public static void main(String[] args) {
