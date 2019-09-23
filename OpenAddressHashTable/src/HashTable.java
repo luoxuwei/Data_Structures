@@ -10,7 +10,7 @@ public class HashTable<K, V> {
 
     private static final int INITIAL_CAPACITY = 16;
 
-    private Node[] table;
+    private Node<K,V>[] table;
 
     private int size = 0;
 
@@ -51,6 +51,45 @@ public class HashTable<K, V> {
         table[i] = new Node(k,v);
         size++;
     }
-    
+
+    public V remove(K k) {
+        int i=hash(k.hashCode());
+
+        for(Node<K,V> cur = table[i]; cur!=null; cur = table[i=nextIndex(i, table.length)]) {
+            if (cur.k.equals(k)) {
+                V ret = cur.v;
+                cur.v = null;
+                table[i] = null;
+                size--;
+                for (i = nextIndex(i, table.length);
+                     (cur = table[i]) != null;
+                     i = nextIndex(i, table.length)) {
+                    int h = hash(cur.k.hashCode());
+                    if (h != i) {
+                        table[i] = null;
+                        while (table[h] != null)
+                            h = nextIndex(h, table.length);
+                        table[h] = cur;
+                    }
+                }
+                return ret;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        HashTable<String, Integer> hashTable = new HashTable<>();
+
+        String[] test = new String[]{"aaa", "aa", "a", "aa", "aa", "aaaa"};
+        for (String s:test) {
+            hashTable.add(s, 0);
+        }
+        System.out.println("test add completed");
+        for (String s:test) {
+            hashTable.remove(s);
+        }
+        System.out.println("test remove completed");
+    }
 
 }
