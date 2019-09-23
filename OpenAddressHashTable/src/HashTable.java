@@ -2,6 +2,10 @@ public class HashTable<K, V> {
     private class Node<K, V> {
         K k;
         V v;
+        public Node(K k, V v) {
+            this.k = k;
+            this.v = v;
+        }
     }
 
     private static final int INITIAL_CAPACITY = 16;
@@ -30,5 +34,23 @@ public class HashTable<K, V> {
         setThreshold(INITIAL_CAPACITY);
     }
 
+    private int hash(int h) {
+        return h & 0x7fffffff & (table.length -1);
+    }
+
+    public void add(K k, V v) {
+        int i = hash(k.hashCode());
+
+        for (Node cur = table[i]; cur != null; cur = table[i=nextIndex(i, table.length)]) {
+            if (cur.k.equals(k)) {
+                cur.v = v;
+                return;
+            }
+        }
+
+        table[i] = new Node(k,v);
+        size++;
+    }
+    
 
 }
