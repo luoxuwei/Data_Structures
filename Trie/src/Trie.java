@@ -106,6 +106,30 @@ public class Trie {
         return isPrefix(word.substring(1), root.next.get(word.charAt(0)));
     }
 
+    public boolean containsWord(String s) {
+        if (s == null || s.length() == 0)
+            return false;
+
+        Node cur=root;
+        int j=0;
+        int len = s.length();
+        for (int i=0; i<s.length(); i++) {
+            j=i;
+            cur = root.next.get(s.charAt(i));
+            while (cur != null) {
+                if (cur.isWord)
+                    return true;
+                j++;
+                if (j>=len)
+                    return false;
+                cur = cur.next.get(s.charAt(j));
+
+            }
+
+        }
+        return false;
+    }
+
     public int getSize() {
         return size;
     }
@@ -114,22 +138,31 @@ public class Trie {
     public static void main(String[] args) {
         System.out.println("Pride and Prejudice");
 
-        ArrayList<String> words = new ArrayList<>();
-        if (FileOperation.readFile("pride-and-prejudice.txt", words)) {
+//        ArrayList<String> words = new ArrayList<>();
+//        if (FileOperation.readFile("pride-and-prejudice.txt", words)) {
+//
+//            Trie trie = new Trie();
+//            for (String word : words)
+//                trie.add(word);
+//            System.out.println("Total different words: " + trie.getSize());
+//            System.out.println("contains "+words.get(2)+": " + trie.contains(words.get(2)));
+//
+//            System.out.println("-----------------");
+//            trie = new Trie();
+//            for (String word : words)
+//                trie.addR(word);
+//            System.out.println("Total different words: " + trie.getSize());
+//            System.out.println("contains "+words.get(2)+": " + trie.containsR(words.get(2)));
+//        }
 
-            Trie trie = new Trie();
-            for (String word : words)
-                trie.add(word);
-            System.out.println("Total different words: " + trie.getSize());
-            System.out.println("contains "+words.get(2)+": " + trie.contains(words.get(2)));
-
-            System.out.println("-----------------");
-            trie = new Trie();
-            for (String word : words)
-                trie.addR(word);
-            System.out.println("Total different words: " + trie.getSize());
-            System.out.println("contains "+words.get(2)+": " + trie.containsR(words.get(2)));
-        }
+        String tests[] = new String[]{"shit", "damn", "stupid", "violence", "blood"};
+        Trie trie = new Trie();
+        for (String s:tests)
+            trie.add(s);
+        String test = "abcde sdaad c shit dddd!";
+        System.out.println("test "+test+" contains "+trie.containsWord(test));
+        test = "Genius only means hard-working all one's life";
+        System.out.println("test "+test+" contains "+trie.containsWord(test));
     }
 
 }
