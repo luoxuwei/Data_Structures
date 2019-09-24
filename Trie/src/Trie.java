@@ -123,11 +123,49 @@ public class Trie {
                 if (j>=len)
                     return false;
                 cur = cur.next.get(s.charAt(j));
-
             }
 
         }
         return false;
+    }
+
+    public String filter(String replaceTag, String s) {
+        if (s == null || s.length() == 0)
+            return s;
+
+        StringBuilder ret = new StringBuilder();
+        int len = s.length();
+        int end = -1;
+        Node cur=root;
+        int j=0;
+        int i=0;
+        Character c;
+        while (i < len) {
+            c = s.charAt(i);
+            cur = root.next.get(c);
+            j=i;
+            while (cur != null) {
+                if (cur.isWord) {
+                    end = j;
+                    break;
+                }
+                j++;
+                if (j>=len) {
+                    break;
+                }
+                cur = cur.next.get(s.charAt(j));
+            }
+            if (end < 0) {
+                ret.append(c);
+                i++;
+            } else {
+                for (int k=i; k<=j; k++)
+                    ret.append(replaceTag);
+                i = end + 1;
+            }
+            end = -1;
+        }
+        return ret.toString();
     }
 
     public int getSize() {
@@ -163,6 +201,8 @@ public class Trie {
         System.out.println("test "+test+" contains "+trie.containsWord(test));
         test = "Genius only means hard-working all one's life";
         System.out.println("test "+test+" contains "+trie.containsWord(test));
+        test = "Genius shit only means hard-working stupid all one's life shit !!!";
+        System.out.println("test filter "+test+" = "+trie.filter("*",test));
     }
 
 }
