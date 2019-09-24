@@ -4,7 +4,7 @@ public class BST<E extends Comparable<E>> {
 
     private class Node {
         E e;
-        Node left,right;
+        Node left,right, parent;
         public Node(E e) {
             this.e = e;
             left = null;
@@ -38,18 +38,32 @@ public class BST<E extends Comparable<E>> {
     }
 
     public void add(E e) {
-        root = add(root, e);
+        if (root == null) {
+            root = new Node(e);
+            size++;
+            return
+        }
+        add(root, e);
     }
 
-    private Node add(Node root, E e) {
-        if (root == null) {
-            size++;
-            return new Node(e);
-        }
+    private void add(Node root, E e) {
+
         if (root.e.compareTo(e) < 0) {
-            root.right = add(root.right, e);
+            if (root.right == null) {
+                root.right = new Node(e);
+                root.right.parent = root;
+                size++;
+            } else {
+                add(root.right, e);
+            }
         } else if (root.e.compareTo(e) > 0) {
-            root.left = add(root.left, e);
+            if (root.left == null) {
+                root.left = new Node(e);
+                root.left.parent = root;
+                size++;
+            } else {
+                add(root.left, e);
+            }
         }
         return root;
     }
