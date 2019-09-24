@@ -337,7 +337,7 @@ public class BST<E extends Comparable<E>> {
     private Node succ(Node node) {
         if (node.right != null)
             return minimum(node.right);
-        while (isRightChild(node.right))
+        while (isRightChild(node))
             node = node.parent;
         return node.parent;
     }
@@ -353,5 +353,20 @@ public class BST<E extends Comparable<E>> {
         if (node.parent != null)
             return node == node.parent.left;
         return false;
+    }
+
+    public void inOrderNR() {
+        Node cur = root;
+        while (true) {
+            if (cur.left != null) {
+                cur = cur.left;
+            } else {
+                System.out.println(cur.e+",");
+                while ((cur = succ(cur)) != null)
+                    System.out.println(cur.e+",");
+                return;
+            }
+
+        }
     }
 }

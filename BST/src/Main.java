@@ -34,5 +34,12 @@ public class Main {
                 throw new IllegalArgumentException("Error");
         }
         System.out.println("removeMinimun test completed!");
+        int[] tests = new int[]{4,3,5,2,6,1,7};
+        bst = new BST<>();
+        for (int i: tests)
+            bst.add(i);
+
+        bst.inOrderNR();
+
     }
 }
